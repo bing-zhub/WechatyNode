@@ -29,7 +29,15 @@ module.exports = function(RED) {
       if(sender.id === currentUser.id){
         var retMsg = {
           payload:{
-            sender: sender,
+            sender: {
+              id: sender.id,
+              friend: sender.payload.friend,
+              alias: sender.payload.alias,
+              gender: sender.payload.gender===1?"男":"女",
+              province: sender.payload.province,
+              city: sender.payload.city,
+              signature: sender.payload.signature,
+            },
             msg: msg.text()
           }
         }
@@ -39,9 +47,9 @@ module.exports = function(RED) {
     
     const bot = new Wechaty()
     
-    bot.on('scan',    onScan)
-    bot.on('login',   onLogin)
-    bot.on('logout',  onLogout)
+    bot.on('scan', onScan)
+    bot.on('login', onLogin)
+    bot.on('logout', onLogout)
     bot.on('message', onMessage)
     
     bot.start()
