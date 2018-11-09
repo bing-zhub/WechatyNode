@@ -1,0 +1,27 @@
+{
+  "name": "wechatynode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "first-node.js",
+  "node-red": {
+    "nodes": {
+      "接收信息": "wechat-node.js"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bing-zhub/WechatyNode.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bing-zhub/WechatyNode/issues"
+  },
+  "homepage": "https://github.com/bing-zhub/WechatyNode#readme",
+  "dependencies": {
+    "wechaty": "^0.22.4"
+  }
+}
