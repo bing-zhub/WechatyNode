@@ -1,25 +1,22 @@
 <script type="text/javascript">
-  RED.nodes.registerType('微信',{
+  RED.nodes.registerType('wechat',{
       category: '社交',
       color: '#a6bbcf',
       defaults: {
-          type: {value:""},
-          topic: {value: ""},
-          location: {value: ""}
       },
       inputs:0,
       outputs:1,
-      icon: "temp.png",
+      icon: "inject.png",
       label: function() {
-          return this.name||"微信";
+          return "微信";
       }
   });
 </script>
 
-<script type="text/x-red" data-template-name="微信">
+<script type="text/x-red" data-template-name="wechat">
   
 </script>
 
-<script type="text/x-red" data-help-name="微信">
+<script type="text/x-red" data-help-name="wechat">
   <p>A simple node that converts the message payloads into all lower-case characters</p>
 </script>

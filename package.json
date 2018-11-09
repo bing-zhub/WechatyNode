@@ -2,10 +2,10 @@
   "name": "wechatynode",
   "version": "1.0.0",
   "description": "",
-  "main": "first-node.js",
+  "main": "wechat-node.js",
   "node-red": {
     "nodes": {
-      "接收信息": "wechat-node.js"
+      "wechat-node": "wechat-node.js"
     }
   },
   "scripts": {
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/bing-zhub/WechatyNode#readme",
   "dependencies": {
-    "wechaty": "^0.22.4"
+    "qrcode-terminal": "^0.12.0",
+    "wechaty": "^0.22.1"
   }
 }

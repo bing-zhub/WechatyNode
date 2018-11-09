@@ -1,15 +1,53 @@
 const { Wechaty } = require('wechaty')
 
-const bot = new Wechaty()
-bot.on('scan',    (qrcode, status) => console.log(['https://api.qrserver.com/v1/create-qr-code/?data=',encodeURIComponent(qrcode),'&size=220x220&margin=20',].join('')))
-bot.on('login',   user => console.log(`User ${user} logined`))
-bot.on('message', message => console.log(`Message: ${message}`))
-bot.start()
+module.exports = function(RED) {
+  function Wechat(config) {
+    var node = this;
+    RED.nodes.createNode(node, config);
+    var currentUser = null
 
-
-// module.exports = function(RED) {
-//   function Wechat(config) {
+    function onScan (qrcode, status) {
+      require('qrcode-terminal').generate(qrcode, { small: true })  // show qrcode on console
+      const qrcodeImageUrl = [
+        'https://api.qrserver.com/v1/create-qr-code/?data=',
+        encodeURIComponent(qrcode),
+      ].join('')
     
-//   }
-//   RED.nodes.registerType("微信",Wechat);
-// }
+      console.log(qrcodeImageUrl)
+    }
+    
+    function onLogin (user) {
+      currentUser = user;
+    }
+    
+    function onLogout(user) {
+      console.log(`${user} logout`)
+    }
+    
+    async function onMessage (msg) {
+      sender = msg.from();
+      if(sender.id === currentUser.id){
+        var retMsg = {
+          payload:{
+            sender: sender,
+            msg: msg.text()
+          }
+        }
+        node.send(retMsg)
+      }
+    }
+    
+    const bot = new Wechaty()
+    
+    bot.on('scan',    onScan)
+    bot.on('login',   onLogin)
+    bot.on('logout',  onLogout)
+    bot.on('message', onMessage)
+    
+    bot.start()
+    .then(() => console.log('Starter Bot Started.'))
+    .catch(e => console.error(e))
+    
+  }
+  RED.nodes.registerType("wechat",Wechat);
+}
