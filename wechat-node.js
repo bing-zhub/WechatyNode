@@ -26,26 +26,31 @@ module.exports = function(RED) {
     
     async function onMessage (msg) {
       sender = msg.from();
-      if(sender.id === currentUser.id){
-        var retMsg = {
-          payload:{
-            sender: {
-              id: sender.id,
-              friend: sender.payload.friend,
-              alias: sender.payload.alias,
-              gender: sender.payload.gender===1?"男":"女",
-              province: sender.payload.province,
-              city: sender.payload.city,
-              signature: sender.payload.signature,
-            },
-            msg: msg.text()
-          }
+      var retMsg = {
+        payload:{
+          sender: {
+            id: sender.id,
+            friend: sender.payload.friend,
+            alias: sender.payload.alias,
+            gender: sender.payload.gender===1?"男":"女",
+            province: sender.payload.province,
+            city: sender.payload.city,
+            signature: sender.payload.signature,
+          },
+          msg: msg.text()
         }
+      }
+      
+      if(config.loginUserOnly === "true"){
+        if(sender.id === currentUser.id)
+          node.send(retMsg)
+      }else{
         node.send(retMsg)
       }
+      
     }
     
-    const bot = new Wechaty()
+    const bot = Wechaty.instance({name: 'node-red-bot'})
     
     bot.on('scan', onScan)
     bot.on('login', onLogin)
@@ -53,9 +58,12 @@ module.exports = function(RED) {
     bot.on('message', onMessage)
     
     bot.start()
-    .then(() => console.log('Starter Bot Started.'))
+    .then(() => console.log('Wechat Bot Started.'))
     .catch(e => console.error(e))
     
+    node.on("close", function(){
+      bot.logout()
+    })
   }
   RED.nodes.registerType("wechat",Wechat);
 }
