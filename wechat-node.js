@@ -19,6 +19,7 @@ module.exports = function(RED) {
     
     function onLogin (user) {
       currentUser = user;
+      node.status({fill:'green', shape:'dot', text: '已登录'})
     }
     
     function onLogout(user) {
@@ -70,6 +71,14 @@ module.exports = function(RED) {
     bot.start()
     .then(() => console.log('Wechat Bot Started.'))
     .catch(e => console.error(e))
+
+    node.on('close', function(remove, done){
+      node.status({fill:'red', shape:'ring', text: '已退出登录'})
+      if(!remove){
+        bot.logout()
+      }
+      done()
+    })
   }
   RED.nodes.registerType("wechat",Wechat);
 }
