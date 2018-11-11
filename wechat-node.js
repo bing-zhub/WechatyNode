@@ -1,4 +1,5 @@
 const { Wechaty } = require('wechaty')
+const fs = require('fs')
 
 module.exports = function(RED) {
   function Wechat(config) {
@@ -50,8 +51,17 @@ module.exports = function(RED) {
       
     }
     
-    const bot = Wechaty.instance({name: 'node-red-bot'})
-    
+    var bot, exist
+    fs.exists('node-red-bot.memory-card.json', function(exists){
+      exist = exists;
+    })
+
+    if(exist){
+      bot = Wechaty.instance({name:'node-red-bot'})
+    }else{
+      bot = new Wechaty({name:'node-red-bot'})
+    }
+
     bot.on('scan', onScan)
     bot.on('login', onLogin)
     bot.on('logout', onLogout)
@@ -60,10 +70,6 @@ module.exports = function(RED) {
     bot.start()
     .then(() => console.log('Wechat Bot Started.'))
     .catch(e => console.error(e))
-    
-    node.on("close", function(){
-      bot.logout()
-    })
   }
   RED.nodes.registerType("wechat",Wechat);
 }
